@@ -12,10 +12,18 @@ const HomePage = () => {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState(null); // Для редактируемой книги
+  const [selectedCategory, setSelectedCategory] = useState(""); // Категория фильтрации
 
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(search.toLowerCase())
-  );
+  // Фильтруем книги по поиску и категории
+  const filteredBooks = books.filter((book) => {
+    const matchesSearch = book.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory = selectedCategory
+      ? book.category === selectedCategory
+      : true;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleAddBook = (newBook) => {
     addBook(newBook);
@@ -37,7 +45,8 @@ const HomePage = () => {
   return (
     <div>
       <h1>Главная страница</h1>
-      <p>Всего книг: {books.length}</p>
+      <p>Отображаемых книг: {filteredBooks.length}</p>{" "}
+      {/* Количество отфильтрованных книг */}
       <input
         type="text"
         placeholder="Поиск книги"
@@ -52,7 +61,19 @@ const HomePage = () => {
       >
         Добавить книгу
       </button>
-
+      {/* Кнопки для фильтрации */}
+      <div>
+        <button onClick={() => setSelectedCategory("")}>Все книги</button>
+        <button onClick={() => setSelectedCategory("Фантастика")}>
+          Фантастика
+        </button>
+        <button onClick={() => setSelectedCategory("Детективы")}>
+          Детективы
+        </button>
+        <button onClick={() => setSelectedCategory("Романы")}>Романы</button>
+        <button onClick={() => setSelectedCategory("Научные")}>Научные</button>
+        <button onClick={() => setSelectedCategory("Детские")}>Детские</button>
+      </div>
       {/* Модальное окно */}
       <Modal
         isOpen={isModalOpen}
@@ -73,7 +94,6 @@ const HomePage = () => {
           initialData={currentBook}
         />
       </Modal>
-
       {/* Список книг */}
       <BookList
         books={filteredBooks}

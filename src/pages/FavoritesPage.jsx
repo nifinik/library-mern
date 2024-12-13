@@ -1,22 +1,20 @@
 import React, { useContext } from "react";
 import { BookContext } from "../context/BookContext";
+import BookList from "../components/BookList";
 
 const FavoritesPage = () => {
-  const { books } = useContext(BookContext);
+  const { books, toggleFavorite, deleteBook } = useContext(BookContext);
   const favoriteBooks = books.filter((book) => book.favorite);
 
   return (
     <div>
       <h1>Избранные книги</h1>
       {favoriteBooks.length > 0 ? (
-        <ul>
-          {favoriteBooks.map((book) => (
-            <li key={book.id}>
-              <h2>{book.title}</h2>
-              <p>Автор: {book.author}</p>
-            </li>
-          ))}
-        </ul>
+        <BookList
+          books={favoriteBooks}
+          onDelete={deleteBook}
+          onToggleFavorite={toggleFavorite}
+        />
       ) : (
         <p>Нет избранных книг</p>
       )}

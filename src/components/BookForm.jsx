@@ -6,15 +6,19 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
     author: "",
     description: "",
     pages: "",
-    image: null,
-    pdfFile: null,
+    category: "Фантастика",
+    imageUrl: null, // Ссылка на изображение
+    pdfUrl: null, // Ссылка на PDF
+    image: null, // Новый файл изображения
+    pdfFile: null, // Новый файл PDF
   });
 
+  // Инициализация данных для редактирования
   useEffect(() => {
     if (initialData) {
       setBook({
         ...initialData,
-        image: null, // Очистка, так как файл нельзя передать напрямую
+        image: null, // Очищаем поле файла для загрузки
         pdfFile: null,
       });
     }
@@ -34,12 +38,13 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Если новые файлы не выбраны, используем старые ссылки
     const updatedBook = {
       ...book,
       id: initialData ? initialData.id : Date.now(),
       favorite: initialData ? initialData.favorite : false,
-      imageUrl: book.image ? URL.createObjectURL(book.image) : book.imageUrl,
-      pdfUrl: book.pdfFile ? URL.createObjectURL(book.pdfFile) : book.pdfUrl,
+      imageUrl: book.image ? URL.createObjectURL(book.image) : book.imageUrl, // Используем либо новое изображение, либо старое
+      pdfUrl: book.pdfFile ? URL.createObjectURL(book.pdfFile) : book.pdfUrl, // Используем либо новый PDF, либо старый
     };
     onSubmit(updatedBook);
   };
@@ -74,6 +79,20 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
         onChange={handleInputChange}
       />
       <label>
+        Категория:
+        <select
+          name="category"
+          value={book.category}
+          onChange={handleInputChange}
+        >
+          <option value="Фантастика">Фантастика</option>
+          <option value="Детективы">Детективы</option>
+          <option value="Романы">Романы</option>
+          <option value="Научные">Научные</option>
+          <option value="Детские">Детские</option>
+        </select>
+      </label>
+      <label>
         Загрузить изображение:
         <input
           name="image"
@@ -82,6 +101,7 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
           onChange={handleFileChange}
         />
       </label>
+      {book.imageUrl && <p>Текущее изображение загружено.</p>}
       <label>
         Загрузить PDF:
         <input
@@ -91,6 +111,7 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
           onChange={handleFileChange}
         />
       </label>
+      {book.pdfUrl && <p>Текущий PDF загружен.</p>}
       <button type="submit">
         {initialData ? "Сохранить изменения" : "Добавить книгу"}
       </button>
