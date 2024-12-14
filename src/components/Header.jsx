@@ -9,10 +9,10 @@ const Header = () => {
   };
 
   const buttonStyle = (button) => ({
-    backgroundColor: activeButton === button ? "#007bff" : "transparent", // Изменяем цвет для активной кнопки
-    color: activeButton === button ? "white" : "black",
+    backgroundColor: activeButton === button ? "#8D4BFF" : "transparent", // Изменяем цвет для активной кнопки
+    color: activeButton === button ? "white" : "white",
     padding: "10px 20px",
-    border: "1px solid #007bff",
+    border: "1px solid #8D4BFF",
     borderRadius: "5px",
     marginRight: "10px",
     cursor: "pointer",
@@ -20,22 +20,24 @@ const Header = () => {
   });
 
   return (
-    <nav style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
-      <NavLink
-        to="/"
-        style={buttonStyle("home")}
-        onClick={() => handleButtonClick("home")}
-      >
-        Главная
-      </NavLink>
-      <NavLink
-        to="/favorites"
-        style={buttonStyle("favorites")}
-        onClick={() => handleButtonClick("favorites")}
-      >
-        Избранные
-      </NavLink>
-    </nav>
+    <div className="container">
+      <nav style={{ margin: "24px 0" }}>
+        <NavLink
+          to="/"
+          style={buttonStyle("home")}
+          onClick={() => handleButtonClick("home")}
+        >
+          Главная
+        </NavLink>
+        <NavLink
+          to="/favorites"
+          style={buttonStyle("favorites")}
+          onClick={() => handleButtonClick("favorites")}
+        >
+          Избранные
+        </NavLink>
+      </nav>
+    </div>
   );
 };
 
