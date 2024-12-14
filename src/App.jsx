@@ -4,18 +4,19 @@ import HomePage from "./pages/HomePage";
 import FavoritesPage from "./pages/FavoritesPage";
 import BookDetailPage from "./pages/BookDetailPage";
 import Header from "./components/Header";
-import "./App.css";
 
 const App = () => {
   return (
     <Router>
-      <Header />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/book/:id" element={<BookDetailPage />} />
-        </Routes>
+      <div className="min-h-screen flex flex-col bg-dark text-light">
+        <Header />
+        <div className="flex-grow p-4">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/book/:id" element={<BookDetailPage />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

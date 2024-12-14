@@ -3,56 +3,49 @@ import { Link } from "react-router-dom";
 
 const BookList = ({ books, onDelete, onToggleFavorite, onEdit }) => {
   return (
-    <ul style={{ listStyleType: "none", padding: 0 }}>
+    <ul className="flex gap-4 flex-wrap">
       {books.map((book) => (
         <li
           key={book.id}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "10px",
-          }}
+          className="flex items-center gap-4 p-4 bg-zinc-700 text-light rounded shadow-md flex-1"
         >
           {book.imageUrl && (
             <img
               src={book.imageUrl}
               alt={book.title}
-              style={{
-                width: "100px",
-                height: "100px",
-                objectFit: "cover",
-                marginRight: "20px",
-                borderRadius: "8px",
-              }}
+              className="w-24 h-24 object-cover rounded"
             />
           )}
-          <div>
-            <h2 style={{ margin: 0 }}>{book.title}</h2>
-            <p style={{ margin: "5px 0" }}>Категория: {book.category}</p>
-            <p style={{ margin: "5px 0" }}>Автор: {book.author}</p>
-            <div style={{ marginTop: "10px" }}>
-              <button onClick={() => onToggleFavorite(book.id)}>
+          <div className="flex-grow">
+            <h2 className="text-xl font-bold">{book.title}</h2>
+            <p>Категория: {book.category}</p>
+            <p>Автор: {book.author}</p>
+            <div className="mt-2 flex gap-2">
+              <Link
+                to={`/book/${book.id}`}
+                className="bg-primary text-light px-4 py-2 rounded"
+              >
+                Детали
+              </Link>
+              <button
+                className="bg-secondary text-light px-4 py-2 rounded"
+                onClick={() => onToggleFavorite(book.id)}
+              >
                 {book.favorite
                   ? "Удалить из избранного"
                   : "Добавить в избранное"}
               </button>
-              <Link to={`/book/${book.id}`}>
-                <button style={{ marginLeft: "10px" }}>Детали</button>
-              </Link>
               {onEdit && (
                 <button
+                  className="bg-blue-600 text-light px-4 py-2 rounded"
                   onClick={() => onEdit(book)}
-                  style={{ marginLeft: "10px" }}
                 >
                   Редактировать
                 </button>
               )}
               <button
+                className="bg-red-600 text-light px-4 py-2 rounded"
                 onClick={() => onDelete(book.id)}
-                style={{ marginLeft: "10px" }}
               >
                 Удалить
               </button>

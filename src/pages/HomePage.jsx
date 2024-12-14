@@ -14,6 +14,7 @@ const HomePage = () => {
   const [currentBook, setCurrentBook] = useState(null); // Для редактируемой книги
   const [selectedCategory, setSelectedCategory] = useState(""); // Категория фильтрации
 
+  // Категории
   const categories = [
     "Все книги",
     "Фантастика",
@@ -28,9 +29,10 @@ const HomePage = () => {
     const matchesSearch = book.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesCategory = selectedCategory
-      ? book.category === selectedCategory
-      : true;
+    const matchesCategory =
+      selectedCategory === "" ||
+      selectedCategory === "Все книги" ||
+      book.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -46,85 +48,74 @@ const HomePage = () => {
     setCurrentBook(null);
   };
 
-  const handleOpenEditModal = (book) => {
-    setCurrentBook(book);
-    setIsModalOpen(true);
-  };
-
   return (
     <div>
-      <h1 className="text-5xl py-5">Главная страница</h1>
-      {/* Количество отфильтрованных книг */}
-      <div className="search-flex flex justify-between items-center">
-        <input
-          className="p-3 bg-zinc-900 rounded-lg w-3/5"
-          type="text"
-          placeholder="Поиск книги"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className="left-home flex gap-5 items-center">
-          <p>Отображаемых книг: {filteredBooks.length}</p>{" "}
+      <h1 className="text-3xl font-bold mb-4">Главная страница</h1>
+      <div className="flex items-start justify-between items-start">
+        <div className="flex flex-col gap-4 mb-4 flex-1">
+          <input
+            type="text"
+            placeholder="Поиск книги"
+            className="p-2 rounded bg-light text-dark"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div className="flex gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`px-4 py-2 rounded ${
+                  selectedCategory === category
+                    ? "bg-secondary text-light"
+                    : "bg-light text-dark hover:bg-secondary hover:text-light"
+                }`}
+                onClick={() =>
+                  setSelectedCategory(category === "Все книги" ? "" : category)
+                }
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-4 flex-1 justify-end">
+          <p className="text-lg mb-4">
+            Отображаемых книг: {filteredBooks.length}
+          </p>{" "}
+          {/* Количество отфильтрованных книг */}
           <button
-            className="add-button bg-lime-700 p-3 rounded-lg"
             onClick={() => {
               setIsModalOpen(true);
               setCurrentBook(null);
             }}
+            className="bg-secondary text-light px-4 py-2 rounded mb-4"
           >
             Добавить книгу
           </button>
         </div>
       </div>
-      {/* Кнопки для фильтрации */}
-      <div className="flex gap-3 my-5">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() =>
-              setSelectedCategory(category === "Все книги" ? "" : category)
-            }
-            style={{
-              backgroundColor:
-                selectedCategory === category ? "#FA6009" : "transparent",
-              color: selectedCategory === category ? "white" : "white",
-              border: "1px solid #FA6009",
-              padding: "10px",
-              cursor: "pointer",
-              borderRadius: "5px",
-            }}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-      {/* Модальное окно */}
+      <BookList
+        books={filteredBooks}
+        onDelete={deleteBook}
+        onToggleFavorite={toggleFavorite}
+        onEdit={(book) => {
+          setCurrentBook(book);
+          setIsModalOpen(true);
+        }}
+      />
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        contentLabel={currentBook ? "Редактировать книгу" : "Добавить книгу"}
-        style={{
-          content: {
-            maxWidth: "500px",
-            margin: "auto",
-            padding: "20px",
-          },
-        }}
+        contentLabel="Добавить/Редактировать книгу"
+        className="bg-dark text-light max-w-lg mx-auto p-4 rounded shadow-lg"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center"
       >
-        <h2>{currentBook ? "Редактировать книгу" : "Добавить книгу"}</h2>
         <BookForm
           onSubmit={currentBook ? handleEditBook : handleAddBook}
           onCancel={() => setIsModalOpen(false)}
           initialData={currentBook}
         />
       </Modal>
-      {/* Список книг */}
-      <BookList
-        books={filteredBooks}
-        onDelete={deleteBook}
-        onToggleFavorite={toggleFavorite}
-        onEdit={handleOpenEditModal}
-      />
     </div>
   );
 };

@@ -7,18 +7,17 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
     description: "",
     pages: "",
     category: "Фантастика",
-    imageUrl: null, // Ссылка на изображение
-    pdfUrl: null, // Ссылка на PDF
-    image: null, // Новый файл изображения
-    pdfFile: null, // Новый файл PDF
+    imageUrl: null,
+    pdfUrl: null,
+    image: null,
+    pdfFile: null,
   });
 
-  // Инициализация данных для редактирования
   useEffect(() => {
     if (initialData) {
       setBook({
         ...initialData,
-        image: null, // Очищаем поле файла для загрузки
+        image: null,
         pdfFile: null,
       });
     }
@@ -38,25 +37,25 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Если новые файлы не выбраны, используем старые ссылки
     const updatedBook = {
       ...book,
       id: initialData ? initialData.id : Date.now(),
       favorite: initialData ? initialData.favorite : false,
-      imageUrl: book.image ? URL.createObjectURL(book.image) : book.imageUrl, // Используем либо новое изображение, либо старое
-      pdfUrl: book.pdfFile ? URL.createObjectURL(book.pdfFile) : book.pdfUrl, // Используем либо новый PDF, либо старый
+      imageUrl: book.image ? URL.createObjectURL(book.image) : book.imageUrl,
+      pdfUrl: book.pdfFile ? URL.createObjectURL(book.pdfFile) : book.pdfUrl,
     };
     onSubmit(updatedBook);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <input
         name="title"
         placeholder="Название"
         value={book.title}
         onChange={handleInputChange}
         required
+        className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
       />
       <input
         name="author"
@@ -64,12 +63,14 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
         value={book.author}
         onChange={handleInputChange}
         required
+        className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
       />
       <textarea
         name="description"
         placeholder="Описание"
         value={book.description}
         onChange={handleInputChange}
+        className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
       />
       <input
         name="pages"
@@ -77,13 +78,15 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
         placeholder="Количество страниц"
         value={book.pages}
         onChange={handleInputChange}
+        className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
       />
-      <label>
+      <label className="block">
         Категория:
         <select
           name="category"
           value={book.category}
           onChange={handleInputChange}
+          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="Фантастика">Фантастика</option>
           <option value="Детективы">Детективы</option>
@@ -92,32 +95,41 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
           <option value="Детские">Детские</option>
         </select>
       </label>
-      <label>
+      <label className="block">
         Загрузить изображение:
         <input
           name="image"
           type="file"
           accept="image/*"
           onChange={handleFileChange}
+          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </label>
-      {book.imageUrl && <p>Текущее изображение загружено.</p>}
-      <label>
+      <label className="block">
         Загрузить PDF:
         <input
           name="pdfFile"
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
+          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </label>
-      {book.pdfUrl && <p>Текущий PDF загружен.</p>}
-      <button type="submit">
-        {initialData ? "Сохранить изменения" : "Добавить книгу"}
-      </button>
-      <button type="button" onClick={onCancel}>
-        Отменить
-      </button>
+      <div className="flex justify-between">
+        <button
+          type="submit"
+          className="bg-primary text-light px-4 py-2 rounded"
+        >
+          {initialData ? "Сохранить изменения" : "Добавить книгу"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="bg-red-600 text-light px-4 py-2 rounded"
+        >
+          Отменить
+        </button>
+      </div>
     </form>
   );
 };

@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-dark text-light;
+}
+
 .container {
   max-width: 1240px;
   margin: 0 auto;
   padding: 0 20px;
-}
-
-* {
-  background-color: #212025;
-  color: white;
 }

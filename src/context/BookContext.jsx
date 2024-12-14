@@ -4,13 +4,11 @@ export const BookContext = createContext();
 
 const BookProvider = ({ children }) => {
   const [books, setBooks] = useState(() => {
-    // Загружаем данные из LocalStorage при первой загрузке
     const storedBooks = localStorage.getItem("books");
     return storedBooks ? JSON.parse(storedBooks) : [];
   });
 
   useEffect(() => {
-    // Сохраняем данные в LocalStorage при каждом изменении списка книг
     localStorage.setItem("books", JSON.stringify(books));
   }, [books]);
 

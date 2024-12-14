@@ -1,43 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const [activeButton, setActiveButton] = useState(""); // Состояние активной кнопки
-
-  const handleButtonClick = (button) => {
-    setActiveButton(button); // Обновляем активную кнопку
-  };
-
-  const buttonStyle = (button) => ({
-    backgroundColor: activeButton === button ? "#8D4BFF" : "transparent", // Изменяем цвет для активной кнопки
-    color: activeButton === button ? "white" : "white",
-    padding: "10px 20px",
-    border: "1px solid #8D4BFF",
-    borderRadius: "5px",
-    marginRight: "10px",
-    cursor: "pointer",
-    textDecoration: "none",
-  });
-
   return (
-    <div className="container">
-      <nav style={{ margin: "24px 0" }}>
+    <nav className="bg-primary p-4 flex justify-between items-center">
+      <div className="flex gap-4">
         <NavLink
           to="/"
-          style={buttonStyle("home")}
-          onClick={() => handleButtonClick("home")}
+          className={({ isActive }) =>
+            `px-4 py-2 rounded ${
+              isActive
+                ? "bg-secondary text-light"
+                : "text-light hover:bg-secondary"
+            }`
+          }
         >
           Главная
         </NavLink>
         <NavLink
           to="/favorites"
-          style={buttonStyle("favorites")}
-          onClick={() => handleButtonClick("favorites")}
+          className={({ isActive }) =>
+            `px-4 py-2 rounded ${
+              isActive
+                ? "bg-secondary text-light"
+                : "text-light hover:bg-secondary"
+            }`
+          }
         >
           Избранные
         </NavLink>
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 };
 
