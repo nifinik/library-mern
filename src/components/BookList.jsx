@@ -3,19 +3,25 @@ import { Link } from "react-router-dom";
 
 const BookList = ({ books, onDelete, onToggleFavorite, onEdit }) => {
   return (
-    <ul className="flex gap-4 flex-wrap">
+    <ul className="space-y-4">
       {books.map((book) => (
         <li
           key={book.id}
-          className="flex items-center gap-4 p-4 bg-zinc-700 text-light rounded shadow-md flex-1"
+          className="flex items-center gap-4 p-4 bg-gray-800 text-light rounded shadow-md"
         >
-          {book.imageUrl && (
+          {/* Проверка наличия изображения в Base64 */}
+          {book.imageBase64 ? (
             <img
-              src={book.imageUrl}
+              src={book.imageBase64}
               alt={book.title}
               className="w-24 h-24 object-cover rounded"
             />
+          ) : (
+            <div className="w-24 h-24 flex items-center justify-center bg-gray-600 rounded">
+              <span className="text-sm">Нет изображения</span>
+            </div>
           )}
+
           <div className="flex-grow">
             <h2 className="text-xl font-bold">{book.title}</h2>
             <p>Категория: {book.category}</p>

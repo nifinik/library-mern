@@ -7,44 +7,46 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
     description: "",
     pages: "",
     category: "Фантастика",
-    imageUrl: null,
-    pdfUrl: null,
-    image: null,
-    pdfFile: null,
+    imageBase64: null,
+    pdfBase64: null,
   });
 
   useEffect(() => {
     if (initialData) {
       setBook({
         ...initialData,
-        image: null,
-        pdfFile: null,
+        imageBase64: initialData.imageBase64 || null,
+        pdfBase64: initialData.pdfBase64 || null,
       });
     }
   }, [initialData]);
 
+  // Конвертация PDF в Base64
+  const convertFileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  // Обработка загрузки PDF
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const base64 = await convertFileToBase64(file);
+      setBook({ ...book, pdfBase64: base64 });
+    }
+  };
+
+  // Обработка текстовых полей
   const handleInputChange = (e) => {
     setBook({ ...book, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fieldName = e.target.name;
-      setBook({ ...book, [fieldName]: file });
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedBook = {
-      ...book,
-      id: initialData ? initialData.id : Date.now(),
-      favorite: initialData ? initialData.favorite : false,
-      imageUrl: book.image ? URL.createObjectURL(book.image) : book.imageUrl,
-      pdfUrl: book.pdfFile ? URL.createObjectURL(book.pdfFile) : book.pdfUrl,
-    };
-    onSubmit(updatedBook);
+    onSubmit({ ...book, id: initialData ? initialData.id : Date.now() });
   };
 
   return (
@@ -95,16 +97,8 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
           <option value="Детские">Детские</option>
         </select>
       </label>
-      <label className="block">
-        Загрузить изображение:
-        <input
-          name="image"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </label>
+
+      {/* Поле для загрузки PDF */}
       <label className="block">
         Загрузить PDF:
         <input
@@ -112,9 +106,13 @@ const BookForm = ({ onSubmit, onCancel, initialData }) => {
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
-          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full p-2 rounded bg-gray-700 text-light border border-gray-600"
         />
+        {book.pdfBase64 && (
+          <p className="text-sm text-green-400 mt-2">PDF загружен успешно!</p>
+        )}
       </label>
+
       <div className="flex justify-between">
         <button
           type="submit"
